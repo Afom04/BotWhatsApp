@@ -1,0 +1,4 @@
+#Ignorando modulos de node
+node_modules/
+#Ignorando Carpeta de auth
+.wwwebjs_auth/
