@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subir Documento</title>
+  </head>
+  <body>
+    <h1>Subir Documento</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <div>
+        <label for="archivo">Selecciona un archivo:</label>
+        <input type="file" id="archivo" name="archivo" accept=".txt" />
+      </div>
+      <div>
+        <label for="opcion">Tipo de opción a añadir:</label>
+        <select id="opcion" name="opcion">
+          <option value="grado">Fechas Grado y URL</option>
+          <option value="opcion2">Opción 2</option>
+          <option value="opcion3">Opción 3</option>
+        </select>
+      </div>
+      <button type="submit">Subir Archivo</button>
+    </form>
+    <div id="mensaje" style="display: none"></div>
+
+    <script>
+      const form = document.getElementById("uploadForm");
+      const mensajeDiv = document.getElementById("mensaje");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        console.log(formData);
+        try {
+          const response = await fetch("http://localhost:3000/api/upload", {
+            method: "POST",
+            body: formData,
+          });
+          const data = await response.json();
+          mensajeDiv.textContent = data.mensaje;
+          mensajeDiv.style.display = "block";
+          form.reset(); // Limpiar el formulario después de la carga exitosa
+        } catch (error) {
+          console.error("Error al subir el archivo:", error);
+          alert("Error al subir el archivo. Por favor, intenta de nuevo.");
+        }
+      });
+    </script>
+  </body>
+</html>

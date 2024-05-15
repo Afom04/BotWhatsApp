@@ -4,6 +4,7 @@ const file = require("./files");
 let grados = null;
 let tramites = null;
 let duplicados = null;
+let historial = null;
 const firstMessage =
   "¿En que te puedo ayudar el día de hoy?\n\n Pulsa:\n  1.Para información de grados\n  2.Para obtener información sobre duplicados\n  3.Para obtener información sobre Trámites\n";
 const error = "Opción no válida.\n";
@@ -20,10 +21,30 @@ const value = (envio) => {
 };
 const validateError = (envio, options) => {
   let tam = options.length;
-  return envio === error ? options.splice(tam - 1, tam) : ""; //.pop esta retornando un valor numerico,no eliminando
+  return envio === error
+    ? options.splice(tam - 1, tam)
+    : "beforeMesagge(options, envio)";
 };
-let read = [//Funcion que permite ir a leer en el JSON segun profundidad
-  (options) => { //Posible manejo de asincronia
+/* const messageLoad = (options) => {
+  if (options[1] == 0) {
+    return historial[0];
+  }
+  if (options[2] == 0) {
+    return historial[1];
+  }
+};
+const beforeMesagge = (options, mensaje) => {
+  if (options.length == 2) {
+    historial[0] = mensaje;
+  }
+  if (options.length == 3) {
+    historial[1] = mensaje;
+  }
+}; */
+let read = [
+  //Funcion que permite ir a leer en el JSON segun profundidad
+  (options) => {
+    //Posible manejo de asincronia
     console.log("Primer menu");
     return options[1] == 1
       ? grados.Mensaje
@@ -47,15 +68,21 @@ let read = [//Funcion que permite ir a leer en el JSON segun profundidad
       ? "" //Ver como devolver a opcion de Primer menu
       : error;
   },
+  (options) => {
+    console.log("Tercer menu");
+    options = [];
+    return "¿Hay algo más en lo que te pueda ayudar?\n1.SI\n2.NO";
+  },
 ];
-async function messageControl(client, message, options) {
+async function messageControl(client, message, options, history) {
   grados = await file("grados");
   tramites = await file("tramites");
   duplicados = await file("duplicados");
   let mensaje = null;
+  historial = history;
   const { from, to, body } = message; //Desestrucurar el mensaje
   //Ver tamaño del arreglo para saber a cual profundidar ir y ver el valor mismo para desenpacacar de JSON
-  if (options.length == 0 || options[0] == 1) {
+  if (options[0] == 1 || options.length == 0) {
     //Verificar primer mensaje y ofrecer menu de opciones
     options.push(body);
     return firstMessage;
@@ -65,6 +92,11 @@ async function messageControl(client, message, options) {
     let control = options.length == 2 ? 2 : 3; //Variable que controla la profundidad de lectura del JSON
     let caso = parseInt(options[control - 1]); //Ver que opción del menu ir
     console.log(`Control ${control} y Caso${caso}`);
+    /*     if (control == 4) {
+      mensaje = "¿Hay algo más en lo que te pueda ayudar?\n1.SI\n2.NO";
+      options = [];
+      return mensaje;
+    } else { */
     switch (caso) {
       case 1:
         console.log("Caso 1");
@@ -101,8 +133,9 @@ async function messageControl(client, message, options) {
         } else {
           //Volver al menu anterior(Mientras no sea el primero)
           //options.pop();
-          mensaje = read[control - 2](options);
-          //mensaje = "Cargando...\n Ingrese la opción a cual quiere volver";
+          //mensaje = read[control - 2](options);
+          //mensaje = messageLoad(options);
+          mensaje = "Ingresa la opción teniendo en cuenta el menu anterior";
           console.log(mensaje);
           //options.pop();
           back(body, options);
@@ -116,9 +149,8 @@ async function messageControl(client, message, options) {
     mensaje = value(mensaje); //Verificando que el mensaje no sea indefinido en caso de no existir en el JSON ->Asigna mensaje de error
     validateError(mensaje, options); //Verificando que si ocurre un error, se vuelve al menu del cual recibe el mensaje
     return mensaje;
+    //}
   } else {
-    options.pop();
-    return error;
   }
 }
 module.exports = messageControl;

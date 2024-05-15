@@ -6,6 +6,7 @@ const messageControl = require("./messageControl");
 let x = 0;
 let mensaje;
 let options = [];
+let history = [];
 /* async */ function start() {
   const client = new Client({
     authStrategy: new LocalAuth(() => {
@@ -66,17 +67,11 @@ let options = [];
       x++;
     } //Corregir VOLVER/ Cambiar evaluación de 3er nivel antes de recibir mensaje
     //console.log(options);
-    mensaje = await messageControl(client, message, options);
+    mensaje = await messageControl(client, message, options, history);
     client.sendMessage(message.from, mensaje);
     //console.log(options);
   });
-  if (options.length == 3) {
-    client.sendMessage(
-      message.from,
-      "¿Hay algo más en lo que te pueda ayudar?\n1.SI\n2.NO"
-    );
-    options = [];
-  }//Ver esta opcion en una llamada en el server, que haga un while atendiendo y se corte, con eso maneja multiusuario
+ //Ver esta opcion en una llamada en el server, que haga un while atendiendo y se corte, con eso maneja multiusuario
   /* return  client;*/
 }
 
