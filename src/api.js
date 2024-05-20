@@ -1,13 +1,7 @@
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
-/* const os = require("os"); */
 const fs = require("fs");
-const messageControl = require("./messageControl");
-let x = 0;
-let mensaje;
-let options = [];
-let history = [];
-/* async */ function start() {
+async function start() {
   const client = new Client({
     authStrategy: new LocalAuth(() => {
       clienId: "uno";
@@ -36,6 +30,7 @@ let history = [];
     fs.rmdir("../.wwebsjs_auth", { recursive: true })
       .then(() => {
         console.log('Carpeta ".wwebsjs_auth" eliminada');
+        start();
       })
       .catch((err) => {
         console.error("Ocurrió un error al eliminar la carpeta:", err);
@@ -50,30 +45,9 @@ let history = [];
     console.log("Client is ready");
   });
 
-  /* await */ client.initialize();
+  await client.initialize();
   console.log("Bot iniciado");
-  client.on("message", async (message) => {
-    if (x == 0) {
-      setTimeout(() => {
-        //Agregar limpieza de chats
-        client.sendMessage(
-          message.from,
-          "Muchas gracias por usarme, espero haberte sido de ayuda\n¡Ten un buen día!"
-        );
-        options = [];
-        x = 0;
-        //client.delete; Borrar CHATS luego de conversacion
-      }, 300000);
-      x++;
-    } //Corregir VOLVER/ Cambiar evaluación de 3er nivel antes de recibir mensaje
-    //console.log(options);
-    mensaje = await messageControl(client, message, options, history);
-    client.sendMessage(message.from, mensaje);
-    //console.log(options);
-  });
- //Ver esta opcion en una llamada en el server, que haga un while atendiendo y se corte, con eso maneja multiusuario
-  /* return  client;*/
+  //Ver esta opcion en una llamada en el server, que haga un while atendiendo y se corte, con eso maneja multiusuario
+  return client;
 }
-
 module.exports = start;
-start();

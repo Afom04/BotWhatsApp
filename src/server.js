@@ -2,10 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const { readFile, writeFile } = require("fs").promises;
+const morgan = require("morgan");
 
 const app = express();
 const PORT = 3000;
-
+app.use(morgan("dev"));
 // Habilitar CORS
 app.use(cors());
 
@@ -24,7 +25,7 @@ const upload = multer({
 // Ruta para recibir archivos TXT mediante una solicitud POST
 app.post("/api/upload", upload.single("archivo"), async (req, res) => {
   try {
-    const option=req.body.opcion;
+    const option = req.body.opcion;
     console.log(option);
     const file = req.file; // Obtener el archivo del cuerpo de la solicitud
 
@@ -33,7 +34,14 @@ app.post("/api/upload", upload.single("archivo"), async (req, res) => {
       encoding: "utf-8",
     });
     console.log(txtContent);
-    if(option){}; //Agregar lógica según opcion seleccionada para actualizar el JSON
+    if (option == "grado") {
+    } //Agregar lógica según opcion seleccionada para actualizar el JSON
+    if (option == "url") {
+    }
+    if (option == "") {
+    }
+    if (option == "") {
+    }
 
     // Envía una respuesta al cliente
     res.json({
@@ -48,5 +56,6 @@ app.post("/api/upload", upload.single("archivo"), async (req, res) => {
 });
 
 app.listen(PORT, () => {
+  let i = 0;
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
