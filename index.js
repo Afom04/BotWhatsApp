@@ -1,31 +1,52 @@
 const { Client } = require("whatsapp-web.js");
 const start = require("./src/api");
 const messageControl = require("./src/messageControl");
-let x = 0;
-let mensaje;
-let options = [];
-let history = [];
-let client = new Client();
+let usersData = {};
+
 (async () => {
-  client = await start();
+  const client = await start();
   console.log("se asigno client");
   client.on("message", async (message) => {
-    if (x == 0) {
-      setTimeout(() => {
-        //Agregar limpieza de chats
+    const userId = message.from;
+    // Si el usuario no tiene datos almacenados, inicialízalos
+    if (!usersData[userId]) {
+      usersData[userId] = {
+        options: [],
+        history: [],
+        timer: null,
+      };
+    }
+
+    const userOptions = usersData[userId].options;
+    const userHistory = usersData[userId].history;
+
+    if (!usersData[userId].timer) {
+      usersData[userId].timer = setTimeout(() => {
+        // Limpiar opciones y historial después de 5 minutos de inactividad
         client.sendMessage(
           message.from,
           "Muchas gracias por usarme, espero haberte sido de ayuda\n¡Ten un buen día!"
         );
-        options = [];
-        x = 0;
-        //client.delete; Borrar CHATS luego de conversacion
+        usersData[userId].options = [];
+        usersData[userId].history = [];
+        usersData[userId].timer = null;
       }, 300000);
-      x++;
-    } //Corregir VOLVER/ Cambiar evaluación de 3er nivel antes de recibir mensaje
-    //console.log(options);
-    mensaje = await messageControl(client, message, options, history);
-    client.sendMessage(message.from, mensaje);
-    //console.log(options);
+    } else {
+      // Resetear el timer si ya existe
+      clearTimeout(usersData[userId].timer);
+      usersData[userId].timer = setTimeout(() => {
+        client.sendMessage(
+          message.from,
+          "Muchas gracias por usarme, espero haberte sido de ayuda\n¡Ten un buen día!"
+        );
+        usersData[userId].options = [];
+        usersData[userId].history = [];
+        usersData[userId].timer = null;
+      }, 300000);
+    }
+
+    // Procesar el mensaje del usuario
+    const response = await messageControl(message, userOptions, userHistory);
+    client.sendMessage(message.from, response);
   });
 })();

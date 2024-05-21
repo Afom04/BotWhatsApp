@@ -1,5 +1,4 @@
-const { Client, message } = require("whatsapp-web.js");
-const send = require("./message");
+const { message } = require("whatsapp-web.js");
 const file = require("./files");
 let grados = null;
 let tramites = null;
@@ -9,7 +8,6 @@ const firstMessage =
   "¿En que te puedo ayudar el día de hoy?\n\n Pulsa:\n  1.Para información de grados\n  2.Para obtener información sobre duplicados\n  3.Para obtener información sobre Trámites\n";
 const error = "Opción no válida.\n";
 const back = (body, options) => {
-  //Renombrar a mas intuitivas
   let tam = options.length;
   return body == 0 && tam > 1 ? options.splice(tam - 2, tam) : "";
 };
@@ -74,7 +72,7 @@ let read = [
     return "¿Hay algo más en lo que te pueda ayudar?\n1.SI\n2.NO";
   },
 ];
-async function messageControl(client, message, options, history) {
+async function messageControl(message, options, history) {
   grados = await file("grados");
   tramites = await file("tramites");
   duplicados = await file("duplicados");
