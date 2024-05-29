@@ -1,5 +1,5 @@
 const { message } = require("whatsapp-web.js");
-const file = require("./files");
+const { leerArchivoJSON } = require("./files");
 let grados = null;
 let tramites = null;
 let duplicados = null;
@@ -73,9 +73,9 @@ let read = [
   },
 ];
 async function messageControl(message, options, history) {
-  grados = await file("grados");
-  tramites = await file("tramites");
-  duplicados = await file("duplicados");
+  grados = await leerArchivoJSON("grados");
+  tramites = await leerArchivoJSON("tramites");
+  duplicados = await leerArchivoJSON("duplicados");
   let mensaje = null;
   historial = history;
   const { from, to, body } = message; //Desestrucurar el mensaje

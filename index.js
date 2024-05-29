@@ -2,6 +2,11 @@ const { Client } = require("whatsapp-web.js");
 const start = require("./src/api");
 const messageControl = require("./src/messageControl");
 let usersData = {};
+const app = require("./src/server.js");
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
 
 (async () => {
   const client = await start();

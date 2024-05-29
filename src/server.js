@@ -3,6 +3,7 @@ const cors = require("cors");
 const multer = require("multer");
 const { readFile, writeFile } = require("fs").promises;
 const morgan = require("morgan");
+const { writeJSONGrados } = require("./files");
 
 const app = express();
 const PORT = 3000;
@@ -35,8 +36,9 @@ app.post("/api/upload", upload.single("archivo"), async (req, res) => {
     });
     console.log(txtContent);
     //cambiar switch
-    switch (options) {
+    switch (option) {
       case "grado":
+        writeJSONGrados(txtContent);
         break;
       case "url":
         break;
@@ -53,7 +55,9 @@ app.post("/api/upload", upload.single("archivo"), async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+/* app.listen(PORT, () => {
   let i = 0;
   console.log(`Servidor escuchando en el puerto ${PORT}`);
-});
+}); */
+
+module.exports = app;
