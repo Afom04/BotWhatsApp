@@ -4,14 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Subir Documento</title>
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
     <h1>Subir Documento</h1>
     <form id="uploadForm" enctype="multipart/form-data">
       <div>
-        <label for="archivo">Selecciona un archivo:</label>
+        <label for="archivo" class="file-label">Selecciona un archivo</label>
         <input type="file" id="archivo" name="archivo" accept=".txt" />
+      </div>
+      <div class="drop-zone" id="drop-zone">
+        O arrastra y suelta el archivo aquí
       </div>
       <div>
         <label for="opcion">Tipo de opción a añadir:</label>
@@ -28,11 +31,40 @@
     <script>
       const form = document.getElementById("uploadForm");
       const mensajeDiv = document.getElementById("mensaje");
+      const fileInput = document.getElementById("archivo");
+      const fileLabel = document.querySelector(".file-label");
+      const dropZone = document.getElementById("drop-zone");
+
+      fileInput.addEventListener("change", () => {
+        if (fileInput.files.length > 0) {
+          fileLabel.textContent = fileInput.files[0].name;
+        } else {
+          fileLabel.textContent = "Selecciona un archivo";
+        }
+      });
+
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
+      });
+
+      dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("dragover");
+      });
+
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("dragover");
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          fileInput.files = files;
+          fileLabel.textContent = files[0].name;
+        }
+      });
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         const formData = new FormData(form);
-        console.log(formData);
         try {
           const response = await fetch("http://localhost:3000/api/upload", {
             method: "POST",
@@ -42,6 +74,7 @@
           mensajeDiv.textContent = data.mensaje;
           mensajeDiv.style.display = "block";
           form.reset(); // Limpiar el formulario después de la carga exitosa
+          fileLabel.textContent = "Selecciona un archivo"; // Restablecer la etiqueta del archivo
         } catch (error) {
           console.error("Error al subir el archivo:", error);
           alert("Error al subir el archivo. Por favor, intenta de nuevo.");

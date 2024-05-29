@@ -34,6 +34,7 @@ app.post("/api/upload", upload.single("archivo"), async (req, res) => {
       encoding: "utf-8",
     });
     console.log(txtContent);
+    //cambiar switch
     if (option == "grado") {
     } //Agregar lógica según opcion seleccionada para actualizar el JSON
     if (option == "url") {
