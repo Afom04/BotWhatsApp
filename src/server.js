@@ -35,15 +35,12 @@ app.post("/api/upload", upload.single("archivo"), async (req, res) => {
     });
     console.log(txtContent);
     //cambiar switch
-    if (option == "grado") {
-    } //Agregar lógica según opcion seleccionada para actualizar el JSON
-    if (option == "url") {
+    switch (options) {
+      case "grado":
+        break;
+      case "url":
+        break;
     }
-    if (option == "") {
-    }
-    if (option == "") {
-    }
-
     // Envía una respuesta al cliente
     res.json({
       mensaje: "Archivo TXT recibido y procesado correctamente.",

@@ -16,33 +16,8 @@ const leerArchivoJSON = async (ruta) => {
   }
 };
 
-// Read the RTF file
-/* const leerArchivoRTF = () => {
-  const filePath = "src/resource/CIRCULAR 001 DE 2024.rtf";
-  try {
-    // Read the RTF file
-    fs.readFileSync(filePath, "utf8", (err, data) => {
-      if (err) {
-        console.error("Error reading file:", err);
-        return;
-      }
-      try {
-        // Create an instance of the parser
-        const parser = new RtfParser();
+const writeJSONGrados = async (data) => {};
 
-        // Parse the RTF data
-        const result = parser.parse(data);
+const writeJSONUrl = async (data) => {};
 
-        // Print the parsed content
-        console.log(result);
-      } catch (parseError) {
-        console.error("Error parsing RTF:", parseError);
-      }
-    });
-  } catch (readError) {
-    console.error("Error reading file:", readError);
-  }
-};
-
-leerArchivoRTF(); */
 module.exports = leerArchivoJSON;
