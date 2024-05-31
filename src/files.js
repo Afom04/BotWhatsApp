@@ -17,67 +17,50 @@ const leerArchivoJSON = async (ruta) => {
   }
 };
 
-/* const transformDates = (input) => {
-  const dateLines = input.split("\n");
-  const transformedDates = [];
+const transformedData = (data) => {
+  // Separar las líneas del archivo
+  const lines = data.split("\n").filter((line) => line.trim() !== "");
 
-  dateLines.forEach((line) => {
-    const [fechaGrado, fechaRecepcion] = line.split(" - ");
-    const [dayGrado, monthGrado] = fechaGrado.split(" de ");
+  // Crear un array para almacenar las líneas convertidas
+  let convertedLines = [];
 
-    const ranges = fechaRecepcion.split(" y ");
-    const dateRange = ranges.map((range) => {
-      const [dayStart, monthStart] = range.split(" de ")[0].split(" al ");
-      const [dayEnd, monthEnd] = range.split(" de ")[1].split(" de ");
+  // Procesar cada línea
+  lines.forEach((line) => {
+    const [grado, recepcion] = line.split(" - ");
 
-      const formattedRange = `${dayStart.padStart(2, "0")}/${monthStart.substr(
-        0,
-        3
-      )} - ${dayEnd.padStart(2, "0")}/${monthEnd.substr(0, 3)}`;
-      return formattedRange;
-    });
-
-    const formattedFechaGrado = `${dayGrado.padStart(
-      2,
-      "0"
-    )}/${monthGrado.substr(0, 3)}`;
-    const formattedFechaRecepcion = dateRange.join(", ");
-
-    transformedDates.push(
-      `*GRADO:* ${formattedFechaGrado}\n*RECEPCIÓN DE DOCUMENTOS:* ${formattedFechaRecepcion}`
-    );
+    // Formatear las líneas según el formato solicitado
+    convertedLines.push(`*GRADO:* ${grado.trim()}`);
+    convertedLines.push(`*RECEPCIÓN DE DOCUMENTOS:* ${recepcion.trim()} \n`);
   });
 
-  return transformedDates.join("\n\n");
-}; */
+  // Unir las líneas convertidas con doble salto de línea
+  const result = convertedLines.join("\n");
+  return result;
+};
 
 const writeJSONGrados = async (data) => {
-  console.log("Escritura de JSON de grados \n" + data);
-  //let datos = transformDates(data);
-  /*   let jsonData = await leerArchivoJSON("grados");
-  jsonData.Opcion.forEach((opcion) => {
-    if (opcion.Fechas) {
-      opcion.Fechas = transformDates(opcion.Fechas);
-    }
-  });
+  //Pasar datos del txt de entrada a como deben ir en el JSON
+  let formattedDates = transformedData(data);
 
-  // Escribir el archivo modificado
-  const transformedData = transformDates(data);
+  // Leer el archivo JSON de forma asíncrona
+  let jsonData = await leerArchivoJSON("grados");
 
-  // Escribir el archivo modificado
-  fs.writeFile("fechas_modificado.txt", transformedData, "utf8", (writeErr) => {
-    if (writeErr) {
-      console.error("Error al escribir el archivo modificado:", writeErr);
+  // Modificar el valor de la clave "Fechas"
+  jsonData.Opcion[0].Fechas = formattedDates.trim();
+
+  // Convertir el JSON de nuevo a string
+  const updatedJsonData = JSON.stringify(jsonData, null, 2);
+
+  // Guardar el JSON actualizado en un nuevo archivo o sobrescribir el existente
+  fs.writeFile("data_updated.json", updatedJsonData, "utf8", (err) => {
+    if (err) {
+      console.error("Error escribiendo el archivo:", err);
       return;
     }
-    console.log('Archivo modificado guardado como "fechas_modificado.txt".');
-  }); */
-  /*   console.log(grados);
-  console.log(grados.Opcion[0]); */
+    console.log("Archivo JSON actualizado guardado como data_updated.json");
+  });
 };
 
 const writeJSONUrl = async (data) => {};
-
-//writeJSONGrados("");
 
 module.exports = { leerArchivoJSON, writeJSONGrados, writeJSONUrl };
