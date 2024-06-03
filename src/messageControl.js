@@ -23,22 +23,6 @@ const validateError = (envio, options) => {
     ? options.splice(tam - 1, tam)
     : "beforeMesagge(options, envio)";
 };
-/* const messageLoad = (options) => {
-  if (options[1] == 0) {
-    return historial[0];
-  }
-  if (options[2] == 0) {
-    return historial[1];
-  }
-};
-const beforeMesagge = (options, mensaje) => {
-  if (options.length == 2) {
-    historial[0] = mensaje;
-  }
-  if (options.length == 3) {
-    historial[1] = mensaje;
-  }
-}; */
 let read = [
   //Funcion que permite ir a leer en el JSON segun profundidad
   (options) => {
@@ -66,11 +50,11 @@ let read = [
       ? "" //Ver como devolver a opcion de Primer menu
       : error;
   },
-  (options) => {
+  /*   (options) => {
     console.log("Tercer menu");
     options = [];
     return "¿Hay algo más en lo que te pueda ayudar?\n1.SI\n2.NO";
-  },
+  }, */
 ];
 async function messageControl(message, options, history) {
   grados = await leerArchivoJSON("grados");
@@ -86,7 +70,7 @@ async function messageControl(message, options, history) {
     return firstMessage;
   } else if (options[0] != 2) {
     options.push(body);
-    console.log(options);
+    //console.log(options);
     let control = options.length == 2 ? 2 : 3; //Variable que controla la profundidad de lectura del JSON
     let caso = parseInt(options[control - 1]); //Ver que opción del menu ir
     console.log(`Control ${control} y Caso${caso}`);

@@ -3,7 +3,7 @@ const cors = require("cors");
 const multer = require("multer");
 const { readFile, writeFile } = require("fs").promises;
 const morgan = require("morgan");
-const { writeJSONGrados } = require("./files");
+const { writeJSONFechas,writeJSONPecunarios } = require("./files");
 
 const app = express();
 const PORT = 3000;
@@ -13,7 +13,7 @@ app.use(cors());
 
 // Configurar multer para manejar archivos en la solicitud POST
 const upload = multer({
-  dest: "uploads/",
+  dest: "upload/",
   fileFilter: (req, file, cb) => {
     if (file.mimetype === "text/plain") {
       cb(null, true);
@@ -35,12 +35,12 @@ app.post("/api/upload", upload.single("archivo"), async (req, res) => {
       encoding: "utf-8",
     });
     console.log(txtContent);
-    //cambiar switch
     switch (option) {
       case "grado":
-        writeJSONGrados(txtContent);
+        await writeJSONFechas(txtContent);
         break;
-      case "url":
+      case "pecunarios":
+        await writeJSONPecunarios(txtContent);
         break;
     }
     // Envía una respuesta al cliente
@@ -54,10 +54,5 @@ app.post("/api/upload", upload.single("archivo"), async (req, res) => {
     });
   }
 });
-
-/* app.listen(PORT, () => {
-  let i = 0;
-  console.log(`Servidor escuchando en el puerto ${PORT}`);
-}); */
 
 module.exports = app;

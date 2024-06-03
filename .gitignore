@@ -2,3 +2,5 @@
 node_modules/
 #Ignorando Carpeta de auth
 .wwebjs_auth/
+#Ignorando Carpeta de Upload
+.upload/

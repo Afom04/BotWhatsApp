@@ -1,4 +1,3 @@
-const { Client } = require("whatsapp-web.js");
 const start = require("./src/api");
 const messageControl = require("./src/messageControl");
 let usersData = {};
@@ -13,7 +12,7 @@ app.listen(3000, () => {
   console.log("se asigno client");
   client.on("message", async (message) => {
     const userId = message.from;
-    // Si el usuario no tiene datos almacenados, inicialízalos
+    // Si el usuario no tiene datos almacenados, inicializarlos
     if (!usersData[userId]) {
       usersData[userId] = {
         options: [],

@@ -1,6 +1,8 @@
 const fs = require("fs");
+const path = require("path");
+const transformDate = require("./prepareData/transformDate.js");
+const { grado, duplicado, tramite } = require("./prepareData/pecunarios.js");
 
-//const RtfParser = require("rtf-parser");
 const leerArchivoJSON = async (ruta) => {
   try {
     // Lee el archivo JSON de forma síncrona
@@ -13,34 +15,14 @@ const leerArchivoJSON = async (ruta) => {
     return jsonObject;
   } catch (error) {
     console.error("Error al leer el archivo JSON:", error);
-    return null; // En caso de error, retorna null o maneja el error según necesites
+    return null; // En caso de error, retorna null o maneja el error
   }
 };
 
-const transformedData = (data) => {
-  // Separar las líneas del archivo
-  const lines = data.split("\n").filter((line) => line.trim() !== "");
-
-  // Crear un array para almacenar las líneas convertidas
-  let convertedLines = [];
-
-  // Procesar cada línea
-  lines.forEach((line) => {
-    const [grado, recepcion] = line.split(" - ");
-
-    // Formatear las líneas según el formato solicitado
-    convertedLines.push(`*GRADO:* ${grado.trim()}`);
-    convertedLines.push(`*RECEPCIÓN DE DOCUMENTOS:* ${recepcion.trim()} \n`);
-  });
-
-  // Unir las líneas convertidas con doble salto de línea
-  const result = convertedLines.join("\n");
-  return result;
-};
-
-const writeJSONGrados = async (data) => {
+const writeJSONFechas = async (data) => {
+  const filePath = path.resolve(__dirname, "resource", "grados.json");
   //Pasar datos del txt de entrada a como deben ir en el JSON
-  let formattedDates = transformedData(data);
+  let formattedDates = transformDate(data);
 
   // Leer el archivo JSON de forma asíncrona
   let jsonData = await leerArchivoJSON("grados");
@@ -52,7 +34,7 @@ const writeJSONGrados = async (data) => {
   const updatedJsonData = JSON.stringify(jsonData, null, 2);
 
   // Guardar el JSON actualizado en un nuevo archivo o sobrescribir el existente
-  fs.writeFile("data_updated.json", updatedJsonData, "utf8", (err) => {
+  fs.writeFile(filePath, updatedJsonData, "utf8", (err) => {
     if (err) {
       console.error("Error escribiendo el archivo:", err);
       return;
@@ -61,6 +43,13 @@ const writeJSONGrados = async (data) => {
   });
 };
 
-const writeJSONUrl = async (data) => {};
+const writeJSONPecunarios = async (data) => {
+  let jsonData1 = await leerArchivoJSON("grados");
+  let jsonData2 = await leerArchivoJSON("duplicados");
+  let jsonData3 = await leerArchivoJSON("tramites");
+  await grado(data, jsonData1);
+  await duplicado(data, jsonData2);
+  await tramite(data, jsonData3);
+};
 
-module.exports = { leerArchivoJSON, writeJSONGrados, writeJSONUrl };
+module.exports = { leerArchivoJSON, writeJSONFechas, writeJSONPecunarios };
