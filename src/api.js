@@ -3,13 +3,15 @@ const qrcode = require("qrcode-terminal");
 const fs = require("fs");
 async function start() {
   const client = new Client({
-    authStrategy: new LocalAuth(() => {
-      clienId: "uno";
-    }),
+    authStrategy: new LocalAuth(),
+/*     puppeteer: {
+      headless: true,
+      args: ["--no-sandbox", "--disable-gpu"],
+    }, */
     webVersionCache: {
       type: "remote",
       remotePath:
-        "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2410.1.html",
+        "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html",
     },
   });
 
@@ -47,7 +49,6 @@ async function start() {
 
   await client.initialize();
   console.log("Bot iniciado");
-  //Ver esta opcion en una llamada en el server, que haga un while atendiendo y se corte, con eso maneja multiusuario
   return client;
 }
 module.exports = start;

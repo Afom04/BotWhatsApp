@@ -1,4 +1,3 @@
-const { message } = require("whatsapp-web.js");
 const { leerArchivoJSON } = require("./files");
 let grados = null;
 let tramites = null;
@@ -17,11 +16,9 @@ const type = (envio) => {
 const value = (envio) => {
   return typeof envio === "undefined" ? (envio = error) : envio;
 };
-const validateError = (envio, options) => {
+const validateError = (envio, options, history) => {
   let tam = options.length;
-  return envio === error
-    ? options.splice(tam - 1, tam)
-    : "beforeMesagge(options, envio)";
+  return envio === error ? options.splice(tam - 1, tam) : history.push(envio);
 };
 let read = [
   //Funcion que permite ir a leer en el JSON segun profundidad
@@ -64,21 +61,17 @@ async function messageControl(message, options, history) {
   historial = history;
   const { from, to, body } = message; //Desestrucurar el mensaje
   //Ver tamaño del arreglo para saber a cual profundidar ir y ver el valor mismo para desenpacacar de JSON
-  if (options[0] == 1 || options.length == 0) {
+  if (/* options[0] == 1 ||  */ options.length == 0) {
     //Verificar primer mensaje y ofrecer menu de opciones
     options.push(body);
+    history.push(firstMessage);
     return firstMessage;
-  } else if (options[0] != 2) {
+  } else if (options.length < 3) {
     options.push(body);
     //console.log(options);
     let control = options.length == 2 ? 2 : 3; //Variable que controla la profundidad de lectura del JSON
     let caso = parseInt(options[control - 1]); //Ver que opción del menu ir
     console.log(`Control ${control} y Caso${caso}`);
-    /*     if (control == 4) {
-      mensaje = "¿Hay algo más en lo que te pueda ayudar?\n1.SI\n2.NO";
-      options = [];
-      return mensaje;
-    } else { */
     switch (caso) {
       case 1:
         console.log("Caso 1");
@@ -114,11 +107,10 @@ async function messageControl(message, options, history) {
           options.pop();
         } else {
           //Volver al menu anterior(Mientras no sea el primero)
-          //options.pop();
-          //mensaje = read[control - 2](options);
-          //mensaje = messageLoad(options);
-          mensaje = "Ingresa la opción teniendo en cuenta el menu anterior";
+          //mensaje = "Ingresa la opción teniendo en cuenta el menu anterior";
+          mensaje = history[history.length - 2];
           console.log(mensaje);
+          history.pop();
           //options.pop();
           back(body, options);
         }
@@ -129,12 +121,9 @@ async function messageControl(message, options, history) {
     }
     mensaje = type(mensaje); //Verificando el tipo de mensaje sacado de JSON, si es interno se desempaqueta
     mensaje = value(mensaje); //Verificando que el mensaje no sea indefinido en caso de no existir en el JSON ->Asigna mensaje de error
-    validateError(mensaje, options); //Verificando que si ocurre un error, se vuelve al menu del cual recibe el mensaje
+    validateError(mensaje, options, history); //Verificando que si ocurre un error, se vuelve al menu del cual recibe el mensaje
     return mensaje;
-    //}
-  } else {
   }
 }
 module.exports = messageControl;
-/* Lograr que al volver al menú anterior vuelva de una vez, no necesitar mirar arriba */
 /* Lograr que cuando llegue al fondo del árbol, vuelva al inicio */
