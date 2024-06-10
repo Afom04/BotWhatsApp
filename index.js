@@ -32,7 +32,7 @@ app.listen(3000, () => {
         // Limpiar opciones y historial después de 3 minutos de inactividad
         client.sendMessage(
           message.from,
-          "Muchas gracias por usarme, espero haberte sido de ayuda\n¡Ten un buen día!"
+          "Espero haberte sido de ayuda\n¡Ten un buen día!"
         );
         usersData[userId].options = [];
         usersData[userId].history = [];
@@ -45,7 +45,7 @@ app.listen(3000, () => {
       usersData[userId].timer = setTimeout(() => {
         client.sendMessage(
           message.from,
-          "Muchas gracias por usarme, espero haberte sido de ayuda\n¡Ten un buen día!"
+          "Espero haberte sido de ayuda\n¡Ten un buen día!"
         );
         usersData[userId].options = [];
         usersData[userId].history = [];
