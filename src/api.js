@@ -4,10 +4,11 @@ const fs = require("fs");
 async function start() {
   const client = new Client({
     authStrategy: new LocalAuth(),
-/*     puppeteer: {
-      headless: true,
-      args: ["--no-sandbox", "--disable-gpu"],
-    }, */
+     puppeteer: {
+      //headless: true,
+//      executablePath: "/usr/bin/google-chrome-stable",
+      args: ["--no-sandbox"/*, "--disable-gpu"*/],
+    }, 
     webVersionCache: {
       type: "remote",
       remotePath:
