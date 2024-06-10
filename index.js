@@ -5,9 +5,9 @@ const sendMessage = require("./src/message");
 let usersData = {};
 let id = null;
 const app = require("./src/server.js");
-
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+const {PORT}=require("./src/config.js");
+app.listen(PORT, () => {
+  console.log("Server running");
 });
 
 (async () => {
@@ -56,8 +56,8 @@ app.listen(3000, () => {
     // Procesar el mensaje del usuario
     const response = await messageControl(message, userOptions, userHistory);
     client.sendMessage(message.from, response);
-    console.log(userOptions);
-    console.log(userHistory);
+/*     console.log(userOptions);
+    console.log(userHistory); */
     if (usersData[id].options.length == 3) {
       console.log("Eliminando data");
       usersData[userId].options = [];
@@ -68,7 +68,7 @@ app.listen(3000, () => {
         "Espero haber sido de ayuda\n Escribenos si necesitas ayuda en algo más"
       );
     }
-    console.log(userHistory);
+    //console.log(userHistory);
   });
 })();
 

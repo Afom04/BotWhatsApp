@@ -27,7 +27,7 @@ const upload = multer({
 app.post("/api/upload", upload.single("archivo"), async (req, res) => {
   try {
     const option = req.body.opcion;
-    console.log(option);
+    //console.log(option);
     const file = req.file; // Obtener el archivo del cuerpo de la solicitud
 
     // Leer el contenido del archivo TXT

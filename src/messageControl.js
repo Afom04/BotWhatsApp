@@ -23,8 +23,7 @@ const validateError = (envio, options, history) => {
 let read = [
   //Funcion que permite ir a leer en el JSON segun profundidad
   (options) => {
-    //Posible manejo de asincronia
-    console.log("Primer menu");
+    //console.log("Primer menu");
     return options[1] == 1
       ? grados.Mensaje
       : options[1] == 2
@@ -36,7 +35,7 @@ let read = [
       : error;
   },
   (options) => {
-    console.log("Segundo menu");
+    //console.log("Segundo menu");
     return options[1] == 1
       ? grados.Opcion[options[2] - 1]
       : options[1] == 2
@@ -61,7 +60,7 @@ async function messageControl(message, options, history) {
   historial = history;
   const { from, to, body } = message; //Desestrucurar el mensaje
   //Ver tamaño del arreglo para saber a cual profundidar ir y ver el valor mismo para desenpacacar de JSON
-  if (/* options[0] == 1 ||  */ options.length == 0) {
+  if (options.length == 0) {
     //Verificar primer mensaje y ofrecer menu de opciones
     options.push(body);
     history.push(firstMessage);
@@ -71,45 +70,45 @@ async function messageControl(message, options, history) {
     //console.log(options);
     let control = options.length == 2 ? 2 : 3; //Variable que controla la profundidad de lectura del JSON
     let caso = parseInt(options[control - 1]); //Ver que opción del menu ir
-    console.log(`Control ${control} y Caso${caso}`);
+    //console.log(`Control ${control} y Caso${caso}`);
     switch (caso) {
       case 1:
-        console.log("Caso 1");
+        //console.log("Caso 1");
         mensaje = read[control - 2](options); //Funcion en array que lee el JSON según profundidad
         console.log(mensaje);
         break;
       case 2:
-        console.log("Caso 2");
+        //console.log("Caso 2");
         mensaje = read[control - 2](options); //Funcion en array que lee el JSON según profundidad
         break;
       case 3:
-        console.log("Caso 3");
+        //console.log("Caso 3");
         mensaje = read[control - 2](options); //Funcion en array que lee el JSON según profundidad
         break;
       case 4:
-        console.log("Caso 4");
+        //console.log("Caso 4");
         mensaje = read[control - 2](options); //Funcion en array que lee el JSON según profundidad
         break;
       case 5:
-        console.log("Caso 5");
+        //console.log("Caso 5");
         mensaje = read[control - 2](options); //Funcion en array que lee el JSON según profundidad
         break;
       case 6:
-        console.log("Caso 6");
+        //console.log("Caso 6");
         mensaje = read[control - 2](options); //Funcion en array que lee el JSON según profundidad
         break;
       case 0:
-        console.log("Caso 0" + options);
+        //console.log("Caso 0" + options);
         if (parseInt(options[1]) == 0) {
           //Ver si en el primer menu intentan volver a un anterior -> No posible
-          console.log("Verificando error");
+          //console.log("Verificando error");
           mensaje = error;
           options.pop();
         } else {
           //Volver al menu anterior(Mientras no sea el primero)
           //mensaje = "Ingresa la opción teniendo en cuenta el menu anterior";
           mensaje = history[history.length - 2];
-          console.log(mensaje);
+          //console.log(mensaje);
           history.pop();
           //options.pop();
           back(body, options);
